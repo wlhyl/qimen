@@ -1,4 +1,4 @@
-** rust编写的基于actix web的阴盘奇门web app**
+**rust编写的基于actix web的阴盘奇门web app**
 
 # api
 ## 单元测试
