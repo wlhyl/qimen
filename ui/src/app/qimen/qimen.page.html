@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{ title }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <ion-row>
+    <ion-col size="5" class="left_col">
+      <ion-label>描述：</ion-label>
+    </ion-col>
+    <ion-col size="7">
+      <ion-input placeholder="输入一些描述信息" [(ngModel)]="qiMenData.describe"></ion-input>
+    </ion-col>
+  </ion-row>
+
+
+
+  <ion-row>
+    <ion-col size="5" class="ion-text-right">
+      <ion-label>时间：</ion-label>
+    </ion-col>
+    <ion-col size="7">
+      <horo-date-time [(year)]="qiMenData.year" [(month)]="qiMenData.month" [(day)]="qiMenData.day"
+        [(hour)]="qiMenData.hour" [(minute)]="qiMenData.minute" [(second)]="qiMenData.second"></horo-date-time>
+    </ion-col>
+  </ion-row>
+
+
+  <ion-button (click)="getQiMen()" expand="block" fill="clear">提交</ion-button>
+</ion-content>

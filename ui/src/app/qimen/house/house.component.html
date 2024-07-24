@@ -1,0 +1,29 @@
+<div class="kong" *ngIf="kong"></div>
+<div class="ma" *ngIf="ma">🐴</div>
+<div class="house">
+  <div (click)="showDescribe(shen)">{{shen.name}}</div>
+  <div style="display: flex;align-items: right;; flex-grow: 1;">
+
+      <!-- 隐干 -->
+      <div style="color: #999999;">
+        <div *ngFor="let s of yin_gan;">
+          <div [ngClass]="{'xing': is_xing(s.name), 'mu': s.mu}"> {{s.name}}</div>
+        </div>
+      </div>
+
+      <!-- 星与门 -->
+    <div>
+      <div (click)="showDescribe(star)">{{star.name}}</div>
+      <div [ngClass]="{'po': is_po}" (click)="showDescribe(men)">{{men.name}}</div>
+    </div>
+    <!-- 天盘干与地盘干 -->
+    <div>
+      <div><span [ngClass]="{'xing': is_xing(s.name), 'mu': s.mu}" (click)="showDescribe(s)" *ngFor="let s of tian;">
+          {{s.name}}</span> </div>
+      <div> <span [ngClass]="{'xing': is_xing(s.name), 'mu': s.mu}" (click)="showDescribe(s)" *ngFor="let s of di;">
+          {{s.name}}</span> </div>
+    </div>
+  </div>
+  <div style="color: #999999;">{{name}}{{gong_num}}</div>
+
+</div>

@@ -1,0 +1,7 @@
+{
+  "name": "qimen",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

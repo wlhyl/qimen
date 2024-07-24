@@ -1,0 +1,88 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{title}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+    (didDismiss)="isAlertOpen=false"></ion-alert>
+
+  <div class="ion-text-center" *ngIf="loading">
+    <ion-label>获取星盘</ion-label>
+    <ion-spinner name="bubbles"></ion-spinner>
+  </div>
+
+  <div class="context">
+    <div *ngIf="pan">
+      <div>时间： {{pan.date.year}}年{{pan.date.month.toString().padStart( 2, "0")}}月{{pan.date.day.toString().padStart(2,
+        "0")}}日
+        {{pan.date.hour.toString().padStart(2, "0")}}:{{pan.date.minute.toString().padStart(2, "0")}}:{{
+        pan.date.second.toString().padStart(2, "0")}}</div>
+      <div>
+        农历：{{pan.lunar_calendar.lunar_year}}年{{pan.lunar_calendar.lunar_month}}{{pan.lunar_calendar.lunar_day}}{{pan.lunar_calendar.time_gan_zhi}}时
+      </div>
+      <div>
+        干支：{{pan.lunar_calendar.lunar_year_gan_zhi}}年{{pan.lunar_calendar.lunar_month_gan_zhi}}月{{pan.lunar_calendar.lunar_day_gan_zhi}}日{{pan.lunar_calendar.time_gan_zhi}}时
+      </div>
+      <div style="display: flex;">节气：
+        <div>
+          <div>
+            {{pan.lunar_calendar.solar_term_first.name}}：{{pan.lunar_calendar.solar_term_first.year}}-{{pan.lunar_calendar.solar_term_first.month.toString().padStart(2,
+            "0")}}-{{pan.lunar_calendar.solar_term_first.day.toString().padStart(2, "0")}}
+            {{pan.lunar_calendar.solar_term_first.hour.toString().padStart(2,
+            "0")}}:{{pan.lunar_calendar.solar_term_first.minute.toString().padStart(2,"0")}}:{{pan.lunar_calendar.solar_term_first.second.toString().padStart(2,
+            "0")}}</div>
+          <div>
+            {{pan.lunar_calendar.solar_term_second.name}}：{{pan.lunar_calendar.solar_term_second.year}}-{{pan.lunar_calendar.solar_term_second.month.toString().padStart(2,
+            "0")}}-{{pan.lunar_calendar.solar_term_second.day.toString().padStart(2, "0")}}
+            {{pan.lunar_calendar.solar_term_second.hour.toString().padStart(2,
+            "0")}}:{{pan.lunar_calendar.solar_term_second.minute.toString().padStart(2,"0")}}:{{pan.lunar_calendar.solar_term_second.second.toString().padStart(2,
+            "0")}}</div>
+        </div>
+      </div>
+      <div>
+        局数：{{ju_shu}}
+        值符：{{pan.zhi_fu.name}}
+        值使：{{pan.zhi_shi.name}}
+      </div>
+      <div>
+        空亡：{{pan.kong[0]}}&emsp;{{pan.kong[1]}}
+        马星：{{pan.ma}}
+      </div>
+      <!-- <div style="display: flex;">入墓：
+        <div>
+          <div>天盘：<span style="margin-right: 5px;" *ngFor="let mu of pan.tian_pan_mu">{{ mu}}</span> </div>
+          <div>地盘：<span style="margin-right: 5px;" *ngFor="let mu of pan.di_pan_mu">{{ mu}}</span> </div>
+          <div>隐干：<span style="margin-right: 5px;" *ngFor="let mu of pan.yin_gan_pan_mu">{{ mu}}</span> </div>
+        </div>
+      </div> -->
+    </div>
+
+
+    <div class="pan" *ngIf="pan" [ngStyle]="{ 'width': width+'px', 'height': height+'px'}">
+      <app-house *ngFor=" let di of pan.di_pan;let i=index" [ngClass]="'house'+i  " [di]="di" [tian]="pan.tian_pan[i]"
+        [shen]="pan.shen_pan[i]" [star]="pan.star_pan[i]" [men]="pan.men_pan[i]" [yin_gan]="pan.yin_gan_pan[i]"
+        [name]="gong_names[i]" [kong]="is_kong(gong_names[i])" [ma]="is_ma(gong_names[i])"></app-house>
+      <div *ngIf="houseClickService.describe" class="describe" (click)="houseClickService.describe=null">
+        <ng-content *ngFor="let text of houseClickService.describe.split('\n'); let i=index">
+          <div *ngIf="i==0"> {{ text }}</div>
+          <li *ngIf="i!=0"> {{ text }}</li>
+        </ng-content>
+      </div>
+
+    </div>
+    <horo-date-time-change (chagedStep)="changeStep($event)"></horo-date-time-change>
+  </div>
+
+
+</ion-content>

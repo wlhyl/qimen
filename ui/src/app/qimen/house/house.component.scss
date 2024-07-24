@@ -1,0 +1,42 @@
+.house {
+    display: flex;
+    flex-direction: column;
+    // justify-content: left;
+    // justify-items: left;
+    align-items: center;
+    // width: 100%;
+    height: 100%;
+}
+
+.po {
+    color: red;
+}
+
+.xing {
+    color: red;
+    border-radius: 50%;
+    border: 2px solid red;
+}
+
+.mu {
+    background-color: black;
+    color: white;
+    border-radius: 50%;
+}
+
+.kong{
+    position: absolute;
+    color: red;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 50%;
+    border: 1px solid red;
+}
+
+
+.ma{
+    position: absolute;
+    right: 0px;
+    margin: 5px;
+
+}
