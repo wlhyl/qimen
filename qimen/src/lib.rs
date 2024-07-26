@@ -265,18 +265,73 @@ impl QiMemShiPan {
             (men_num + 9 - n) % 9
         };
 
+        let men_num = if men_num == 0 { 9 } else { men_num };
+
         // let zhi_shi_men_index = if men_num ==5{5}else{ men_nums.iter().position(|&x| x == men_num).unwrap()};
         let zhi_shi_men_index = if let Some(x) = men_nums.iter().position(|&x| x == men_num) {
             x
         } else {
             5 // 如果men_num==5,即值使门落入中五宫，则寄于二宫，二宫坐标为5
         };
+
         let mem_index = (du_jia_gan_index_on_di_pan + 8 - zhi_shi_men_index) % 8;
         let men_pan = [&mens[mem_index..], &mens[..mem_index]].concat();
 
-        // 隐干盘
-        let yin_gan_index = (time_gan_index_on_di_pan + 8 - zhi_shi_men_index) % 8;
-        let yin_gan_pan = [&di_pan[yin_gan_index..], &di_pan[..yin_gan_index]].concat();
+        // 引干盘
+        let yin_gan_pan = if lunar.time_gan_zhi.gan() == TianGan::甲 {
+            // dun_jia_gan
+            let yin_pan_jiu_gong: Vec<u8> = (0..9)
+                .map(|x| {
+                    let n = if ju_shu > 0 {
+                        (x + 5) % 9
+                    } else {
+                        (5 + 9 - x) % 9
+                    };
+
+                    if n == 0 {
+                        9
+                    } else {
+                        n
+                    }
+                })
+                .collect();
+
+            let n = gan_seq
+                .iter()
+                .position(|x| x.to_string() == dun_jia_gan.to_string())
+                .unwrap();
+            // 引起序列，起于5宫
+            let yin_gan_seq = [&gan_seq[n..], &gan_seq[..n]].concat();
+
+            let mut yin_gan_pan: Vec<Vec<Gan>> = vec![
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+                vec![],
+            ];
+
+            yin_pan_jiu_gong.iter().enumerate().for_each(|(index, &x)| {
+                match x {
+                    1 => yin_gan_pan[0].push(yin_gan_seq[index]),
+                    8 => yin_gan_pan[1].push(yin_gan_seq[index]),
+                    3 => yin_gan_pan[2].push(yin_gan_seq[index]),
+                    4 => yin_gan_pan[3].push(yin_gan_seq[index]),
+                    9 => yin_gan_pan[4].push(yin_gan_seq[index]),
+                    2 | 5 => yin_gan_pan[5].push(yin_gan_seq[index]),
+                    7 => yin_gan_pan[6].push(yin_gan_seq[index]),
+                    _ => yin_gan_pan[7].push(yin_gan_seq[index]), //9=>7
+                };
+            });
+
+            yin_gan_pan
+        } else {
+            let yin_gan_index = (time_gan_index_on_di_pan + 8 - zhi_shi_men_index) % 8;
+            [&di_pan[yin_gan_index..], &di_pan[..yin_gan_index]].concat()
+        };
 
         // 入墓
         // 地盘入墓
@@ -349,46 +404,6 @@ impl QiMemShiPan {
                 _ => gans,
             })
             .collect();
-        // let mut di_pan_mu = vec![];
-        // if di_pan[1].contains(&丁) {
-        //     di_pan_mu.push("丁墓于艮".to_string());
-        // }
-
-        // if di_pan[1].contains(&己) {
-        //     di_pan_mu.push("己墓于艮".to_string());
-        // }
-
-        // if di_pan[1].contains(&庚) {
-        //     di_pan_mu.push("庚墓于艮".to_string());
-        // }
-
-        // if di_pan[3].contains(&辛) {
-        //     di_pan_mu.push("辛墓于巽".to_string());
-        // }
-
-        // if di_pan[3].contains(&壬) {
-        //     di_pan_mu.push("辛墓于巽".to_string());
-        // }
-
-        // if di_pan[5].contains(&dun_jia_gan) {
-        //     di_pan_mu.push(format!("甲({})墓于坤", dun_jia_gan));
-        // }
-
-        // if di_pan[5].contains(&癸) {
-        //     di_pan_mu.push("癸墓于坤".to_string());
-        // }
-
-        // if di_pan[7].contains(&乙) {
-        //     di_pan_mu.push("乙墓于乾".to_string());
-        // }
-
-        // if di_pan[7].contains(&丙) {
-        //     di_pan_mu.push("丙墓于乾".to_string());
-        // }
-
-        // if di_pan[7].contains(&戊) {
-        //     di_pan_mu.push("戊墓于乾".to_string());
-        // }
 
         // 天盘入墓
         let tian_pan = tian_pan
@@ -460,48 +475,8 @@ impl QiMemShiPan {
                 _ => gans,
             })
             .collect();
-        // let mut tian_pan_mu = vec![];
-        // if tian_pan[1].contains(&丁) {
-        //     tian_pan_mu.push("丁墓于艮".to_string());
-        // }
 
-        // if tian_pan[1].contains(&己) {
-        //     tian_pan_mu.push("己墓于艮".to_string());
-        // }
-
-        // if tian_pan[1].contains(&庚) {
-        //     tian_pan_mu.push("庚墓于艮".to_string());
-        // }
-
-        // if tian_pan[3].contains(&辛) {
-        //     tian_pan_mu.push("辛墓于巽".to_string());
-        // }
-
-        // if tian_pan[3].contains(&壬) {
-        //     tian_pan_mu.push("辛墓于巽".to_string());
-        // }
-
-        // if tian_pan[5].contains(&dun_jia_gan) {
-        //     tian_pan_mu.push(format!("甲({})墓于坤", dun_jia_gan));
-        // }
-
-        // if tian_pan[5].contains(&癸) {
-        //     tian_pan_mu.push("癸墓于坤".to_string());
-        // }
-
-        // if tian_pan[7].contains(&乙) {
-        //     tian_pan_mu.push("乙墓于乾".to_string());
-        // }
-
-        // if tian_pan[7].contains(&丙) {
-        //     tian_pan_mu.push("丙墓于乾".to_string());
-        // }
-
-        // if tian_pan[7].contains(&戊) {
-        //     tian_pan_mu.push("戊墓于乾".to_string());
-        // }
-
-        // 隐干盘入墓
+        // 引干盘入墓
         let yin_gan_pan = yin_gan_pan
             .into_iter()
             .enumerate()
@@ -571,46 +546,6 @@ impl QiMemShiPan {
                 _ => gans,
             })
             .collect();
-        // let mut yin_gan_pan_mu = vec![];
-        // if yin_gan_pan[1].contains(&丁) {
-        //     yin_gan_pan_mu.push("丁墓于艮".to_string());
-        // }
-
-        // if yin_gan_pan[1].contains(&己) {
-        //     yin_gan_pan_mu.push("己墓于艮".to_string());
-        // }
-
-        // if yin_gan_pan[1].contains(&庚) {
-        //     yin_gan_pan_mu.push("庚墓于艮".to_string());
-        // }
-
-        // if yin_gan_pan[3].contains(&辛) {
-        //     yin_gan_pan_mu.push("辛墓于巽".to_string());
-        // }
-
-        // if yin_gan_pan[3].contains(&壬) {
-        //     yin_gan_pan_mu.push("辛墓于巽".to_string());
-        // }
-
-        // if yin_gan_pan[5].contains(&dun_jia_gan) {
-        //     yin_gan_pan_mu.push(format!("甲({})墓于坤", dun_jia_gan));
-        // }
-
-        // if yin_gan_pan[5].contains(&癸) {
-        //     yin_gan_pan_mu.push("癸墓于坤".to_string());
-        // }
-
-        // if yin_gan_pan[7].contains(&乙) {
-        //     yin_gan_pan_mu.push("乙墓于乾".to_string());
-        // }
-
-        // if yin_gan_pan[7].contains(&丙) {
-        //     yin_gan_pan_mu.push("丙墓于乾".to_string());
-        // }
-
-        // if yin_gan_pan[7].contains(&戊) {
-        //     yin_gan_pan_mu.push("戊墓于乾".to_string());
-        // }
 
         // 马星
         let ma = [DiZhi::寅, DiZhi::巳, DiZhi::申, DiZhi::亥]

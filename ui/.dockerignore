@@ -5,3 +5,4 @@ www
 Dockerfile 
 node_modules
 README.md
+package-lock.json
