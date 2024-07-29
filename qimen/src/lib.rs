@@ -296,12 +296,31 @@ impl QiMemShiPan {
                 })
                 .collect();
 
-            let n = gan_seq
+            // 确定，引起序列
+            // 如果遁甲干在5宫，按九宫飞，引干仍会伏吟，需要将坤二宫的地盘干（也可以是天盘干，因为此时天盘干与地盘干相）
+            // 放入中五宫，按九宫飞
+
+            // 找出地盘中五宫的天干
+            let gan_on_di_pan_5_gong = di_pan_jiu_gong
                 .iter()
-                .position(|x| x.to_string() == dun_jia_gan.to_string())
-                .unwrap();
+                .enumerate()
+                .find_map(|(index, &x)| if x == 5 { Some(gan_seq[index]) } else { None });
+            let gan_on_di_pan_5_gong = gan_on_di_pan_5_gong.unwrap();
+
+            let n = if gan_on_di_pan_5_gong.to_string() == dun_jia_gan.to_string() {
+                // 找出坤二宫的index
+                di_pan_jiu_gong.iter().position(|&x| x == 2).unwrap()
+            } else {
+                gan_seq
+                    .iter()
+                    .position(|x| x.to_string() == dun_jia_gan.to_string())
+                    .unwrap()
+            };
+
             // 引起序列，起于5宫
             let yin_gan_seq = [&gan_seq[n..], &gan_seq[..n]].concat();
+
+            // if yin_gan_seq[0]
 
             let mut yin_gan_pan: Vec<Vec<Gan>> = vec![
                 vec![],
